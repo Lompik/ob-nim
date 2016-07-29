@@ -9,7 +9,7 @@ install:
       wget http://nim-lang.org/download/nim-$nim_version.tar.xz
       tar xvJf nim-$nim_version.tar.xz
       cd nim-$nim_version
-      sh build.sh
+      LDFLAGS=-lrt sh build.sh
       bin/nim c koch
       ./koch boot -d:release
       cd ..
@@ -18,7 +18,6 @@ install:
   - cask
 cache:
   directories:
-    - nim-0.14.2
     - nim-0.14.2
 before_script:
   - export PATH="nim-0.14.2/bin${PATH:+:$PATH}"
