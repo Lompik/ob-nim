@@ -1,6 +1,8 @@
 ;;; ob-nim.el --- Babel Functions for C and Similar Languages -*- lexical-binding: t; -*-
 
 ;; Author: Lompik
+;; Package-Version: 0.0.1
+;; Package-Requires: ((cl-lib "0.5"))
 ;; Keywords: literate programming, reproducible research
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -40,7 +42,6 @@
   "Command used to compile a nim source code file into an executable.
 Parameter may be used, like nim cpp"
   :group 'org-babel
-  :version "24.3"
   :type 'string)
 
 ;;;###autoload
