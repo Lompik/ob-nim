@@ -1,5 +1,5 @@
 #+TITLE: Examples
-
+/Note:/ Best viewed in /emacs/ or [[https://github.com/Lompik/ob-nim/raw/master/examples.org][Raw]] from Github.
 * basic
 
 The following a basic a "nim" src block. Passing simple named variable (up to tables) is supported.
@@ -19,7 +19,7 @@ echo $(x*3 == 9)
 
 * nim's "define" and  imports in the parameter list
 
-This is done using ~:import imp1 impo2 ...~ and ~:define def1 def2 ...~ constructs. Useful for setting ~release~, ~debug~ or ~ssl~ ...
+This is done using ~:import imp1 imp2 ...~ and ~:define def1 def2 ...~ constructs. Useful for setting ~release~, ~debug~ or ~ssl~ ...
 
 #+header: :var x = 3
 #+begin_src nim :import sequtils strutils :define release mydef
@@ -67,7 +67,7 @@ print_2d(x)
 
 ***  the column names
 
-A more human-readable approach is to use column names (~:colnames yes~ param). The variable will be passed to nim as a Table of "[string, array[0..rowlength, type]]" where type is the type of the *first* column.
+A more human-readable approach is to use column names (~:colnames yes~ param). The variable will be passed to nim as a Table of ~[string, array[0..rowlength, type]]~ where type is the type of the *first* column.
 
 #+name: eg
 | col1 | col2 |

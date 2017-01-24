@@ -11,3 +11,5 @@
 Passing variables and org tables with =:var= headers is supported. org tables are passed as 2D nim's array without the =:colnames= header. With :colnames, org tables will be nim's Table with the org table header as keys.
 
 Additionally, you can specify libraries in the header for example =:import sequtils tables ..= and also define symbols with =:define release ssl ...=.
+
+See https://github.com/Lompik/ob-nim/raw/master/examples.org for details.
