@@ -1,0 +1,84 @@
+#+TITLE: Examples
+
+* basic
+
+The following a basic a "nim" src block. Passing simple named variable (up to tables) is supported.
+
+Usage: Move the pointer on the src block and hit ~C-c C-c~
+(~org-ctrl-c-ctrl-c~). The nim code is compiled by /org-mode/ and the
+result is pasted under the ~RESULTS~ pragma (depending on the ~:value~
+parameter,see section /14.8.2.2/ in org manual)
+
+#+begin_src nim :var x = 3
+echo $(x*3 == 9)
+#+end_src
+
+#+RESULTS:
+: true
+
+
+* nim's "define" and  imports in the parameter list
+
+This is done using ~:import imp1 impo2 ...~ and ~:define def1 def2 ...~ constructs. Useful for setting ~release~, ~debug~ or ~ssl~ ...
+
+#+header: :var x = 3
+#+begin_src nim :import sequtils strutils :define release mydef
+when defined(release):
+  when defined(mydef):
+    var temp = @[1, 2].map (proc(i:int ) : string= $(i*x) )
+    echo temp.join("")
+#+end_src
+
+#+RESULTS:
+: 36
+
+
+* tables
+** disregarding the column names
+
+With the ~:colnames no~ param, the tables are passed as nims 2D arrays with type inferred by the content of the entire column: if all the column's value is float or int use that otherwise use string type for the column.
+
+#+name: eg
+| col1 | col2 |
+|------+------|
+| a    | 1    |
+| b    | 2.0  |
+#+header: :colnames no
+#+header: :var x = eg
+#+begin_src nim
+import strutils
+proc print_2d [I1,I2,T2](x:array[I1,array[I2,T2]]): void =
+  for i in x:
+    echo i.join(" ")
+print_2d(x)
+#+end_src
+
+#+RESULTS:
+| col1 | col2 |
+| a    |    1 |
+| b    |  2.0 |
+
+
+**  the column names
+
+A more human-readable approch is to use column names (~:colnames yes~ param). The variable will be passed to nim as a Table of "[string, array[0..rowlength, type]]" where type is the type of the *first* column.
+
+#+name: eg
+| col1 | col2 |
+|------+------|
+| a    | 1    |
+| b    | 2.0  |
+#+header: :colnames yes
+#+header: :var temp = eg
+#+begin_src nim
+import strutils
+for j in temp["col1"].low..temp["col1"].high:
+  var line = ""
+  for i in temp.keys():
+    line &= $temp[i][j] & " "
+  echo line
+
+# temp["col2"][0] ** 1 -> error as first element is a string
+#+end_src
+
+#+RESULTS:
