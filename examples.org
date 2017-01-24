@@ -34,7 +34,13 @@ when defined(release):
 
 
 * tables
-** disregarding the column names
+** from nim to org
+The default behavior of /org-mode/ is used. Users can choose from several options:
+  - [best] format the table from nim and return a the table as string (together with ~:results value raw~ for org formatted table or /html/latex/ if formatted as such )
+  - /org-mode/ will try to guess from the program output. See example below.
+
+** from org to nim
+*** disregarding the column names
 
 With the ~:colnames no~ param, the tables are passed as nims 2D arrays with type inferred by the content of the entire column: if all the column's value is float or int use that otherwise use string type for the column.
 
@@ -59,9 +65,9 @@ print_2d(x)
 | b    |  2.0 |
 
 
-**  the column names
+***  the column names
 
-A more human-readable approch is to use column names (~:colnames yes~ param). The variable will be passed to nim as a Table of "[string, array[0..rowlength, type]]" where type is the type of the *first* column.
+A more human-readable approach is to use column names (~:colnames yes~ param). The variable will be passed to nim as a Table of "[string, array[0..rowlength, type]]" where type is the type of the *first* column.
 
 #+name: eg
 | col1 | col2 |
