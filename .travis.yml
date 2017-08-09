@@ -1,4 +1,5 @@
 language: c
+dist: trusty
 sudo: no
 install:
   - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > travis.sh && source ./travis.sh
@@ -6,7 +7,7 @@ install:
     if [ ! -x nim-$nim_version/bin/nim ]; then
       # If the Nim executable does not exist (means we haven't installed Nim yet)
       # build nim
-      wget http://nim-lang.org/download/nim-$nim_version.tar.xz
+      wget https://nim-lang.org/download/nim-$nim_version.tar.xz
       tar xvJf nim-$nim_version.tar.xz
       cd nim-$nim_version
       LDFLAGS=-lrt sh build.sh
