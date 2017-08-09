@@ -18,18 +18,18 @@ install:
   - cask
 cache:
   directories:
-    - nim-0.14.2
+    - nim-0.17.0
 before_script:
-  - export PATH="nim-0.14.2/bin${PATH:+:$PATH}"
+  - export PATH="nim-0.17.0/bin${PATH:+:$PATH}"
 env:
-  - EVM_EMACS=emacs-24.4-travis nim_version=0.14.2
-  - EVM_EMACS=emacs-24.5-travis nim_version=0.14.2
-  - EVM_EMACS=emacs-git-snapshot-travis nim_version=0.14.2
+  - EVM_EMACS=emacs-24.4-travis nim_version=0.17.0
+  - EVM_EMACS=emacs-24.5-travis nim_version=0.17.0
+  - EVM_EMACS=emacs-git-snapshot-travis nim_version=0.17.0
 matrix:
   fast_finish: true
   allow_failures:
     env:
-      - EVM_EMACS=emacs-git-snapshot-travis nim_version=0.14.2
+      - EVM_EMACS=emacs-git-snapshot-travis nim_version=0.17.0
 script:
   - emacs --version
   - make test
