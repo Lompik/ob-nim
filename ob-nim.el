@@ -35,7 +35,7 @@
 (require 'cl-lib)
 
 (declare-function org-entry-get "org"
-		  (pom property &optional inherit literal-nil))
+		          (pom property &optional inherit literal-nil))
 (declare-function org-remove-indentation "org" (code &optional n))
 
 (defcustom org-babel-nim-compiler "nim c"
@@ -69,57 +69,57 @@ header arguments."
   (let* ((tmp-bin-file (org-babel-nim--sanitize-file-name
                         (org-babel-temp-file
                          "nim_src_" )))
-	 (tmp-src-file (concat tmp-bin-file
-			       ".nim"))
-	 (cmdline (cdr (assoc :cmdline params)))
-	 (cmdline (if cmdline (concat " " cmdline) ""))
-	 (define (org-babel-read
-		  (or (cdr (assoc :define params))
-		      (org-entry-get nil "define" t))
-		  nil))
-	 (define (if (stringp define) (split-string define " ") nil))
-	 (define (if define
-		     (mapconcat
-		      (lambda (inc) (format "-d:%s" inc)) define
-		      " ")
-		   ""))
-	 (flags (cdr (assoc :flags params)))
-	 (flags (mapconcat 'identity
-			   (if (listp flags) flags (list flags)) " "))
-	 (libs (org-babel-read
-		(or (cdr (assq :libs params))
-		    (org-entry-get nil "libs" t))
-		nil))
-	 (libs (mapconcat #'identity
-			  (if (listp libs) libs (list libs))
-			  " "))
-	 (full-body
-	  (org-babel-nim-expand-nim   body params)))
+	     (tmp-src-file (concat tmp-bin-file
+			                   ".nim"))
+	     (cmdline (cdr (assoc :cmdline params)))
+	     (cmdline (if cmdline (concat " " cmdline) ""))
+	     (define (org-babel-read
+		          (or (cdr (assoc :define params))
+		              (org-entry-get nil "define" t))
+		          nil))
+	     (define (if (stringp define) (split-string define " ") nil))
+	     (define (if define
+		             (mapconcat
+		              (lambda (inc) (format "-d:%s" inc)) define
+		              " ")
+		           ""))
+	     (flags (cdr (assoc :flags params)))
+	     (flags (mapconcat 'identity
+			               (if (listp flags) flags (list flags)) " "))
+	     (libs (org-babel-read
+		        (or (cdr (assq :libs params))
+		            (org-entry-get nil "libs" t))
+		        nil))
+	     (libs (mapconcat #'identity
+			              (if (listp libs) libs (list libs))
+			              " "))
+	     (full-body
+	      (org-babel-nim-expand-nim   body params)))
     (with-temp-file tmp-src-file (insert full-body))
     (org-babel-eval
      (format "%s %s %s -o:%s %s %s"
-	     org-babel-nim-compiler
-	     define
-	     flags
-	     (org-babel-process-file-name tmp-bin-file)
-	     (org-babel-process-file-name tmp-src-file)
-	     libs)
+	         org-babel-nim-compiler
+	         define
+	         flags
+	         (org-babel-process-file-name tmp-bin-file)
+	         (org-babel-process-file-name tmp-src-file)
+	         libs)
      "")
     (let ((results
-	   (org-babel-eval
-	    (concat tmp-bin-file cmdline)
-	    "")))
+	       (org-babel-eval
+	        (concat tmp-bin-file cmdline)
+	        "")))
       (when results
-	(org-babel-reassemble-table
-	 (org-babel-result-cond (cdr (assoc :result-params params))
-	   (org-babel-read results t)
-	   (let ((tmp-file (org-babel-temp-file "c-")))
-	     (with-temp-file tmp-file (insert results))
-	     (org-babel-import-elisp-from-file tmp-file)))
-	 (org-babel-pick-name
-	  (cdr (assoc :colname-names params)) (cdr (assoc :colnames params)))
-	 (org-babel-pick-name
-	  (cdr (assoc :rowname-names params)) (cdr (assoc :rownames params)))))
+	    (org-babel-reassemble-table
+	     (org-babel-result-cond (cdr (assoc :result-params params))
+	       (org-babel-read results t)
+	       (let ((tmp-file (org-babel-temp-file "c-")))
+	         (with-temp-file tmp-file (insert results))
+	         (org-babel-import-elisp-from-file tmp-file)))
+	     (org-babel-pick-name
+	      (cdr (assoc :colname-names params)) (cdr (assoc :colnames params)))
+	     (org-babel-pick-name
+	      (cdr (assoc :rowname-names params)) (cdr (assoc :rownames params)))))
       )))
 
 (defun org-babel-nim-expand-nim (body params)
@@ -178,7 +178,7 @@ its header arguments."
   "Handle the FORMAT part of TYPE with the data from VAL."
   (let ((format-data (cadr type)))
     (if (stringp format-data)
-	(cons "" (format format-data val))
+	    (cons "" (format format-data val))
       (funcall format-data val))))
 
 (defun org-babel-nim-val-to-nim-type (val)
@@ -187,14 +187,14 @@ Return a list (TYPE-NAME FORMAT).  TYPE-NAME should be the name of the type.
 FORMAT can be either a format string or a function which is called with VAL.
 If VAL is a table it is exported as a `array' of `array' in nim."
   (let* ((basetype (org-babel-nim-val-to-base-type val))
-	 (type
-	  (cl-case basetype
+	     (type
+	      (cl-case basetype
             (integerp '("int" "%d"))
             (floatp '("float" "%f"))
             (stringp '("string" "\"%s\""))
             (t (error "Unknown type %S" basetype))))
-	 (nim_nil
-	  (cl-case basetype
+	     (nim_nil
+	      (cl-case basetype
             (integerp 0)
             (floatp 0.0)
             (stringp "")
@@ -204,29 +204,29 @@ If VAL is a table it is exported as a `array' of `array' in nim."
      ((floatp val) type) ;; a numeric declared in the #+begin_src line
      ((and (listp val) (listp (car val))) ;; a table
       `(,(car type)
-	(lambda (val)
-	  (cons
-	   (format "array[0..%d, array[0..%d, %s]]" (1- (length val)) (1- (length (car val))) ,(car type))
-	   (concat
-	    "[\n"
-	    (mapconcat
-	     (lambda (v)
+	    (lambda (val)
+	      (cons
+	       (format "array[0..%d, array[0..%d, %s]]" (1- (length val)) (1- (length (car val))) ,(car type))
 	       (concat
-		" ["
-		(mapconcat (lambda (w) (format ,(cadr type) (if w w ,nim_nil))) v ",")
-		"]" ))
-	     val
-	     ",\n")
-	    "\n]" )))))
+	        "[\n"
+	        (mapconcat
+	         (lambda (v)
+	           (concat
+		        " ["
+		        (mapconcat (lambda (w) (format ,(cadr type) (if w w ,nim_nil))) v ",")
+		        "]" ))
+	         val
+	         ",\n")
+	        "\n]" )))))
      ((or (listp val) (vectorp val)) ;; a list declared in the #+begin_src line
       `(,(car type)
-	(lambda (val)
-	  (cons
-	   (format "[%d]" (length val))
-	   (concat
-	    "["
-	    (mapconcat (lambda (v) (format ,(cadr type) v)) val ",")
-	    "]")))))
+	    (lambda (val)
+	      (cons
+	       (format "[%d]" (length val))
+	       (concat
+	        "["
+	        (mapconcat (lambda (v) (format ,(cadr type) v)) val ",")
+	        "]")))))
      (t ;; treat unknown types as string
       type))))
 
@@ -241,14 +241,14 @@ If VAL is a table it is exported as a `array' of `array' in nim."
    ((or (listp val) (vectorp val))
     (let ((type nil))
       (mapc (lambda (v)
-	      (cl-case (org-babel-nim-val-to-base-type v)
+	          (cl-case (org-babel-nim-val-to-base-type v)
                 (stringp (setq type 'stringp))
                 (floatp
                  (if (or (not type) (eq type 'integerp))
                      (setq type 'floatp)))
                 (integerp
                  (unless type (setq type 'integerp)))))
-	    val)
+	        val)
       type))
    (t 'stringp)))
 
@@ -257,26 +257,26 @@ If VAL is a table it is exported as a `array' of `array' in nim."
 of the same value."
   ;; TODO list support
   (let ((var (car pair))
-	(val (cdr pair)))
+	    (val (cdr pair)))
     (when (symbolp val)
       (setq val (symbol-name val))
       (when (= (length val) 1)
-	(setq val (string-to-char val))))
+	    (setq val (string-to-char val))))
     (let* ((type-data (org-babel-nim-val-to-nim-type val))
-	   (type (car type-data))
-	   (formated (org-babel-nim-format-val type-data val))
-	   (suffix (car formated))
-	   (data (cdr formated)))
+	       (type (car type-data))
+	       (formated (org-babel-nim-format-val type-data val))
+	       (suffix (car formated))
+	       (data (cdr formated)))
       (format "var %s: %s = %s"
-	      var
-	      (if (string= suffix "") type suffix)
-	      data))))
+	          var
+	          (if (string= suffix "") type suffix)
+	          data))))
 
 (defun org-babel-nim-format-val-cn (type val coln)
   "Handle the FORMAT part of TYPE with the data from VAL and COLN."
   (let ((format-data (cadr type)))
     (if (stringp format-data)
-	(cons "" (format format-data val))
+	    (cons "" (format format-data val))
       (funcall format-data (apply #'cl-mapcar #'list val)	       coln))))
 
 (defun org-babel-nim-val-to-nim-type-cn (val _colnames)
@@ -285,14 +285,14 @@ Return a list (TYPE-NAME FORMAT).  TYPE-NAME should be the name of the type.
 FORMAT can be either a format string or a function which is called with VAL.
 If VAL is a table it is exported a `Table' of `array' with COLNAMES as keys."
   (let* ((basetype (org-babel-nim-val-to-base-type val))
-	 (type
-	  (cl-case basetype
+	     (type
+	      (cl-case basetype
             (integerp '("int" "%d"))
             (floatp '("float" "%f"))
             (stringp '("string" "\"%s\""))
             (t (error "Unknown type %S" basetype))))
-	 (nim_nil
-	  (cl-case basetype
+	     (nim_nil
+	      (cl-case basetype
             (integerp 0)
             (floatp 0.0)
             (stringp "")
@@ -302,32 +302,32 @@ If VAL is a table it is exported a `Table' of `array' with COLNAMES as keys."
      ((floatp val) type) ;; a numeric declared in the #+begin_src line
      ((and (listp val) (listp (car val))) ;; a table
       `(,(car type)
-	(lambda (val coln)
-	  (cons
-	   ;;(format "Table[string,seq[%s]]"  ,(car type))
+	    (lambda (val coln)
+	      (cons
+	       ;;(format "Table[string,seq[%s]]"  ,(car type))
 
-	   (format "Table[string,array[0..%d,%s]]" (- (length (car val)) 1) ,(car type))
-	   (concat
-	    "{\n"
-	    (mapconcat
-	     (lambda (v)
+	       (format "Table[string,array[0..%d,%s]]" (- (length (car val)) 1) ,(car type))
 	       (concat
-		(format "  \"%s\"" (pop coln))
-		": ["
-		(mapconcat (lambda (w) (format ,(cadr type) (if w w ,nim_nil))) v ",")
-		"]" ))
-	     val
-	     ",\n")
-	    "  }.toTable" )))))
+	        "{\n"
+	        (mapconcat
+	         (lambda (v)
+	           (concat
+		        (format "  \"%s\"" (pop coln))
+		        ": ["
+		        (mapconcat (lambda (w) (format ,(cadr type) (if w w ,nim_nil))) v ",")
+		        "]" ))
+	         val
+	         ",\n")
+	        "  }.toTable" )))))
      ((or (listp val) (vectorp val)) ;; a list declared in the #+begin_src line
       `(,(car type)
-	(lambda (val)
-	  (cons
-	   (format "[%d]" (length val))
-	   (concat
-	    "["
-	    (mapconcat (lambda (v) (format ,(cadr type) v)) val ",")
-	    "]")))))
+	    (lambda (val)
+	      (cons
+	       (format "[%d]" (length val))
+	       (concat
+	        "["
+	        (mapconcat (lambda (v) (format ,(cadr type) v)) val ",")
+	        "]")))))
      (t ;; treat unknown types as string
       type))))
 
@@ -336,22 +336,22 @@ If VAL is a table it is exported a `Table' of `array' with COLNAMES as keys."
 var of the same value."
   ;; TODO list support
   (let* ((colnames (cddr valscn))
-	 (pair (car valscn))
-	 (var (car pair))
-	 (val (cdr pair)))
+	     (pair (car valscn))
+	     (var (car pair))
+	     (val (cdr pair)))
     (when (symbolp val)
       (setq val (symbol-name val))
       (when (= (length val) 1)
-	(setq val (string-to-char val))))
+	    (setq val (string-to-char val))))
     (let* ((type-data (org-babel-nim-val-to-nim-type-cn val colnames))
-	   (type (car type-data))
-	   (formated (org-babel-nim-format-val-cn type-data val colnames))
-	   (suffix (car formated))
-	   (data (cdr formated)))
+	       (type (car type-data))
+	       (formated (org-babel-nim-format-val-cn type-data val colnames))
+	       (suffix (car formated))
+	       (data (cdr formated)))
       (format "var %s: %s = %s"
-	      var
-	      (if (string= suffix "") type suffix)
-	      data))))
+	          var
+	          (if (string= suffix "") type suffix)
+	          data))))
 
 (defun org-babel-nim-table-sizes-to-nim (pair)
   "Create constants of table dimensions, if PAIR is a table."
