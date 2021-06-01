@@ -1,15 +1,43 @@
-#+TITLE: Nim org-mode babel integration
+#+title: Nim Org Babel Integration
 
-=ob-nim= adds support for evaluating org-mode source code blocks (=C-c C-c= inside a code block). To enable this feature add nim to your babel languages after loading =ob-nim=:
+=ob-nim= adds support for evaluating Org mode source code blocks (=C-c
+C-c= inside a code block).
 
-#+BEGIN_SRC elisp
+To enable this feature add nim to your babel languages after loading
+=ob-nim=:
+
+#+begin_src elisp
 (org-babel-do-load-languages
   'org-babel-load-languages
   '((emacs-lisp . t) (org . t) (nim . t)  ...))
-#+END_SRC
+#+end_src
 
-Passing variables and org tables with =:var= headers is supported. org tables are passed as 2D nim's array without the =:colnames= header. With :colnames, org tables will be nim's Table with the org table header as keys.
+* Extra Org Babel header args
+** =:var=
+Passing variables and Org tables with =:var= header args is
+supported. Org tables are passed as 2D Nim arrays without the
+=:colnames= header.
+** =:colnames=
+With =:colnames=, Org tables will be of Nim =Table= type, with the Org
+table header elements as keys.
+** =:import=
+You can specify libraries in the header. Example: =:import sequtils
+tables ..=.
+** =:define=
+You can define symbols with =:define release ssl ..=.
 
-Additionally, you can specify libraries in the header for example =:import sequtils tables ..= and also define symbols with =:define release ssl ...=.
+* Examples
+See [[examples.org][examples.org]].
 
-See https://github.com/Lompik/ob-nim/raw/master/examples.org for details.
+* Contributing
+Before submitting a PR, it will be useful to ensure that all tests in
+this repo pass locally. The user will need to have [[https://github.com/cask/cask][cask]] installed on
+their system, and of course [[https://nim-lang.org][nim]].
+
+When providing a PR for a bug fix or a new feature, also add related
+tests to [[tests/test-ob-nim.el][test-ob-nim.el]].
+
+To test your changes, run this from the repo root:
+#+begin_example
+make test
+#+end_example
