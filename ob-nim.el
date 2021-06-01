@@ -120,12 +120,8 @@ header arguments."
 (defun org-babel-nim-expand-nim (body params)
   "Expand a block of nim code with org-babel according to
 its header arguments."
-  (let* ((vars (if (fboundp 'org-babel--get-vars)
-                   (org-babel--get-vars params)
-                 (mapcar #'cdr (org-babel-get-header params :var))))
-         (colnames (if (fboundp 'org-babel--get-vars)
-                       (cdr (assq :colname-names params))
-                     (cdar (org-babel-get-header params :colname-names))))
+  (let* ((vars (org-babel--get-vars params))
+         (colnames (cdr (assq :colname-names params)))
          (imports (org-babel-read
                    (or (cdr (assoc :import params))
                        (org-entry-get nil "import" t))
