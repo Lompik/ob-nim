@@ -1,0 +1,22 @@
+---
+on:
+  pull_request:
+    types:
+      - '*'
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: purcell/setup-emacs@master
+        with:
+          version: '26.3'
+      - uses: conao3/setup-cask@master
+      - uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: '1.4.0'  # default is 'stable'
+
+      - name: Run tests
+        run: make test
