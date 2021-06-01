@@ -111,16 +111,16 @@ header arguments."
 	        "")))
       (when results
 	    (org-babel-reassemble-table
-	     (org-babel-result-cond (cdr (assoc :result-params params))
-	       (org-babel-read results t)
+         (org-babel-result-cond (cdr (assoc :result-params params))
+	       results
 	       (let ((tmp-file (org-babel-temp-file "c-")))
 	         (with-temp-file tmp-file (insert results))
-	         (org-babel-import-elisp-from-file tmp-file)))
+	         (org-babel-import-elisp-from-file tmp-file))
+           )
 	     (org-babel-pick-name
 	      (cdr (assoc :colname-names params)) (cdr (assoc :colnames params)))
 	     (org-babel-pick-name
-	      (cdr (assoc :rowname-names params)) (cdr (assoc :rownames params)))))
-      )))
+	      (cdr (assoc :rowname-names params)) (cdr (assoc :rownames params))))))))
 
 (defun org-babel-nim-expand-nim (body params)
   "Expand a block of nim code with org-babel according to

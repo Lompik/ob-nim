@@ -96,6 +96,17 @@ for j in temp[\"col1\"].low..temp[\"col1\"].high:
      (goto-char 0)
      (org-babel-next-src-block)
      (expect (org-babel-execute-src-block) :to-equal '(("col1" "col2") hline ("a" 1) ("b" 2.0))))
+
+ (it "should not modify nim output
+"
+     (insert "#+begin_src nim :results output
+echo \"-0\"
+#+end_src")
+     (goto-char 0)
+     (expect (org-babel-execute-src-block) :to-equal "-0
+"))
+
  )
+
 (provide 'test-ob-nim)
 ;;; test-ob-nim.el ends here
